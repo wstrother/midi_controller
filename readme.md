@@ -4,4 +4,4 @@ This is a small project I'm working on that allows me to use any USB connected g
 
 ## Dependencies
 
-* [https://github.com/wstrother/ZSquirrel-2.7](ZSquirrel 2.7)
+* [ZSquirrel 2.7](https://github.com/wstrother/ZSquirrel-2.7)
