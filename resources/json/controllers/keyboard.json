@@ -1,0 +1,13 @@
+[
+  {
+   "name": "Select",
+   "class": "button",
+   "mapping": ["button_map_key", "escape"]
+  },
+
+  {
+   "name": "Start",
+   "class": "button",
+   "mapping": ["button_map_key", "return"]
+  }
+]

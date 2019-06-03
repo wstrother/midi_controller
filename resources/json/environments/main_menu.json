@@ -1,0 +1,24 @@
+{
+  "layers": [
+    {
+      "name": "environment",
+      "class": "Layer",
+      "groups": "sprite group",
+      "ControllerInterface": {
+        "load_controllers": [
+          "64_controller.json"
+        ]
+      },
+      "MidiHudInterface": {
+        "set_midi_hud": 0
+      }
+    },
+    {
+      "name": "MIDI layer",
+      "class": "MidiLayer",
+      "MidiHudInterface": {
+        "set_midi_interface": ["64_midi.json", 0]
+      }
+    }
+  ]
+}

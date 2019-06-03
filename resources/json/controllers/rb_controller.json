@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Button 0",
+    "class": "button",
+    "mapping": [
+      "button_map_button",
+      0,
+      "Controller (Harmonix Drum Kit for Xbox 360)",
+      0
+    ]
+  },
+  {
+    "name": "Button 1",
+    "class": "button",
+    "mapping": [
+      "button_map_button",
+      1,
+      "Controller (Harmonix Drum Kit for Xbox 360)",
+      0
+    ]
+  },
+  {
+    "name": "Button 2",
+    "class": "button",
+    "mapping": [
+      "button_map_button",
+      2,
+      "Controller (Harmonix Drum Kit for Xbox 360)",
+      0
+    ]
+  },
+  {
+    "name": "Button 3",
+    "class": "button",
+    "mapping": [
+      "button_map_button",
+      3,
+      "Controller (Harmonix Drum Kit for Xbox 360)",
+      0
+    ]
+  },
+  {
+    "name": "Button 4",
+    "class": "button",
+    "mapping": [
+      "button_map_button",
+      4,
+      "Controller (Harmonix Drum Kit for Xbox 360)",
+      0
+    ]
+  },
+  {
+    "name": "Button 6",
+    "class": "button",
+    "mapping": [
+      "button_map_button",
+      6,
+      "Controller (Harmonix Drum Kit for Xbox 360)",
+      0
+    ]
+  },
+  {
+    "name": "Button 7",
+    "class": "button",
+    "mapping": [
+      "button_map_button",
+      7,
+      "Controller (Harmonix Drum Kit for Xbox 360)",
+      0
+    ]
+  }
+]
