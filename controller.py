@@ -6,6 +6,7 @@ from zsquirrel.entities import Layer, Sprite
 from zsquirrel.control.controller_interface import ControllerInterface
 from app.interfaces.midi_hud_interface import MidiHudInterface
 from app.layers.midi_layer import MidiLayer
+from app.sprites.hud_sprites import AxisSprite, FaderSprite, ButtonSprite, LatchSprite
 from app.pygame_screen import PygameScreen
 
 
@@ -15,7 +16,11 @@ if __name__ == "__main__":
     entities = [
         Layer,
         MidiLayer,
-        Sprite
+        Sprite,
+        AxisSprite,
+        ButtonSprite,
+        LatchSprite,
+        FaderSprite
     ]
     interfaces = [
         ControllerInterface,
@@ -24,7 +29,7 @@ if __name__ == "__main__":
 
     c = Context.get_default_context(
         Game(
-            screen=PygameScreen(SCREEN_SIZE)
+            screen=PygameScreen(SCREEN_SIZE),
         ),
         entities,
         interfaces

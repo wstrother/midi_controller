@@ -2,7 +2,7 @@
   "layers": [
     {
       "name": "environment",
-      "class": "Layer",
+      "class": "MidiLayer",
       "groups": "sprite group",
       "ControllerInterface": {
         "load_controllers": [
@@ -10,14 +10,56 @@
         ]
       },
       "MidiHudInterface": {
-        "set_midi_hud": 0
+        "set_hud_items": [
+          0, 20, 300,
+          "Meter 1",
+          "Button 1",
+          "Button 2",
+          "Button 3",
+          "Button 4"
+        ]
+      }
+    }
+  ],
+
+  "sprites": [
+    {
+      "name": "Meter 1",
+      "class": "FaderSprite",
+      "MidiHudInterface": {
+        "set_device": ["Stick", "y", -1, 2, 0.5]
       }
     },
+
     {
-      "name": "MIDI layer",
-      "class": "MidiLayer",
+      "name": "Button 1",
+      "class": "ButtonSprite",
       "MidiHudInterface": {
-        "set_midi_interface": ["64_midi.json", 0]
+        "set_device": ["Dpad", [1, 0]]
+      }
+    },
+
+    {
+      "name": "Button 2",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": ["Dpad", [-1, 0]]
+      }
+    },
+
+    {
+      "name": "Button 3",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": ["Dpad", [0, 1]]
+      }
+    },
+
+    {
+      "name": "Button 4",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": ["Stick", [0, -1]]
       }
     }
   ]
