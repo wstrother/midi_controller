@@ -1,12 +1,16 @@
 {
   "Meter 1": {
-    "change": {
-      "status": "control_change",
-      "control": 0
+    "down": {
+      "status": "program_change",
+      "program": 1
     },
     "up": {
       "status": "program_change",
       "program": 0
+    },
+    "change": {
+      "status": "control_change",
+      "control": 0
     }
   },
 

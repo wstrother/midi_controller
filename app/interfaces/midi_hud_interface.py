@@ -10,8 +10,43 @@ class MidiHudInterface(HudInterface):
         layer.message_dict = data
         layer.target_controller = controller
 
-    def set_hud_items(self, layer, index, margin, width, *sprites):
-        x, y = 0, 0
+    def set_hud_listeners(self, layer, file_name):
+        data = self.context.load_resource(file_name)
+
+        for name in data:
+            sprite = self.get_value(name)
+            listeners = data[name]
+
+            prefix = ""
+
+            if isinstance(sprite, ButtonSprite):
+                prefix = "button_"
+
+            if isinstance(sprite, AxisSprite):
+                prefix = "meter_"
+
+            for event in listeners:
+                response = listeners[event]
+                response["name"] = "midi_message"
+                self.add_hud_listener(
+                    sprite, layer,
+                    prefix + event,
+                    response.copy())
+
+    @staticmethod
+    def add_hud_listener(sprite, layer, name, response):
+        sprite.add_listener({
+            "name": name,
+            "target": layer,
+            "response": response
+        })
+
+    def add_midi_huds(self, layer, *huds):
+        for hud in huds:
+            self.set_hud_items(layer, *hud)
+
+    def set_hud_items(self, layer, position, index, margin, width, *sprites):
+        x, y = position
 
         last_w = 0
         last_h = 0
@@ -25,7 +60,7 @@ class MidiHudInterface(HudInterface):
 
             x += (last_w + margin)
             if (x + hud.size[0]) > width:
-                x = 0
+                x = position[0]
                 y += (last_h + margin)
 
             hud.set_position(x, y)

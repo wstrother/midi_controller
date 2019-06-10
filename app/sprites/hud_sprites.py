@@ -90,9 +90,9 @@ class ButtonSprite(MidiHudSprite):
         last, on = self.last, self.on
         if last != on:
             if on:
-                self.handle_event("button_pressed")
+                self.handle_event("button_on")
             else:
-                self.handle_event("button_released")
+                self.handle_event("button_off")
 
         self.last = on
 
@@ -184,9 +184,12 @@ class AxisSprite(MidiHudSprite):
         last, current = self.last, int(self.meter.value)
 
         if last != current:
+            # print("handling meter change")
+
             self.handle_event({
                 "name": "meter_change",
-                "value": current
+                "value": current,
+                "lerp": False
             })
 
         self.last = current
@@ -219,13 +222,18 @@ class FaderSprite(AxisSprite):
                 value *= rate * (abs(value) / threshold)
 
                 self.meter.value += value
+                # print("\t\t VALUE CHANGE", value)
+                # print("\t\t", self.device.get_value())
 
     def update_meter_events(self):
+        # print(self.device.get_value())
         last, current = self.last, int(self.meter.value)
         super(FaderSprite, self).update_meter_events()
 
         if last > current:
+            # print("handling meter down")
             self.handle_event("meter_down")
 
         if last < current:
+            # print("handling meter up")
             self.handle_event("meter_up")

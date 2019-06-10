@@ -1,5 +1,7 @@
 # import mido
 # from sys import argv
+# import pygame
+
 from zsquirrel.context import Context
 from zsquirrel.game import Game
 from zsquirrel.entities import Layer, Sprite
@@ -13,6 +15,8 @@ from app.pygame_screen import PygameScreen
 SCREEN_SIZE = 800, 600
 
 if __name__ == "__main__":
+    # pygame.init()
+
     entities = [
         Layer,
         MidiLayer,
@@ -29,7 +33,9 @@ if __name__ == "__main__":
 
     c = Context.get_default_context(
         Game(
-            screen=PygameScreen(SCREEN_SIZE),
+            screen=PygameScreen(SCREEN_SIZE)
+            # clock=pygame.time.Clock(),
+            # frame_rate=60
         ),
         entities,
         interfaces
