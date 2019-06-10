@@ -3,6 +3,14 @@ from app.sprites.hud_sprites import ButtonSprite, AxisSprite, FaderSprite
 
 
 class MidiHudInterface(HudInterface):
+    def __init__(self, *args):
+        super(MidiHudInterface, self).__init__(*args)
+
+        self.init_order += [
+            self.add_midi_huds.__name__,
+            self.set_hud_listeners.__name__
+        ]
+
     def set_midi_interface(self, layer, file_name, index):
         controller = self.get_value("environment").controllers[index]
         data = self.context.load_resource(file_name)
@@ -35,6 +43,7 @@ class MidiHudInterface(HudInterface):
 
     @staticmethod
     def add_hud_listener(sprite, layer, name, response):
+        print(sprite)
         sprite.add_listener({
             "name": name,
             "target": layer,
@@ -59,7 +68,7 @@ class MidiHudInterface(HudInterface):
             self.set_container_image(hud)
 
             x += (last_w + margin)
-            if (x + hud.size[0]) > width:
+            if (x + hud.size[0]) > width + position[0]:
                 x = position[0]
                 y += (last_h + margin)
 

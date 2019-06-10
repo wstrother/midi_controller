@@ -15,17 +15,20 @@
         "add_midi_huds": [
           [
             [0, 0],
-            1, 20, 300,
-            "Button 1"
+            0, 20, 350,
+            "MIDI CC 0", "MIDI CC 1",
+            "C 60", "C# 61", "D 62", "D# 63", "E 64",
+            "F 65", "F# 66", "G 67", "G# 68",
+            "PC 0", "MIDI CC 2", "MIDI CC 3"
           ],
 
           [
-            [300, 0],
-            0, 20, 300,
-            "Meter 1",
-            "Button 2"
+            [400, 0],
+            1, 20, 300,
+            "PC 1/2",
+            "C 48", "C# 49", "D 50", "D# 51",
+            "MIDI CC 4", "MIDI CC 5", "PC 3", "PC 4"
           ]
-
         ]
       }
     }
@@ -33,42 +36,187 @@
 
   "sprites": [
     {
-      "name": "Meter 1",
+      "name": "MIDI CC 0",
+      "class": "AxisSprite",
+      "MidiHudInterface": {
+        "set_device": ["Stick", "y"]
+      }
+    },
+
+    {
+      "name": "MIDI CC 1",
+      "class": "AxisSprite",
+      "MidiHudInterface": {
+        "set_device": ["Stick", "x"]
+      }
+    },
+
+    {
+      "name": "C 60",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": "A"
+      }
+    },
+
+    {
+      "name": "C# 61",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": "B"
+      }
+    },
+
+    {
+      "name": "D 62",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": "Start"
+      }
+    },
+
+    {
+      "name": "D# 63",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": "Z"
+      }
+    },
+
+    {
+      "name": "E 64",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": "R"
+      }
+    },
+
+    {
+      "name": "F 65",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": ["C Stick", [0, 1]]
+      }
+    },
+
+    {
+      "name": "F# 66",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": ["C Stick", [-1, 0]]
+      }
+    },
+
+    {
+      "name": "G 67",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": ["C Stick", [1, 0]]
+      }
+    },
+
+    {
+      "name": "G# 68",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": ["C Stick", [0, -1]]
+      }
+    },
+
+    {
+      "name": "PC 0",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": "L"
+      }
+    },
+
+    {
+      "name": "MIDI CC 2",
+      "class": "FaderSprite",
+      "MidiHudInterface": {
+        "set_device": ["Dpad", "x", 1, 2]
+      }
+    },
+
+    {
+      "name": "MIDI CC 3",
       "class": "FaderSprite",
       "MidiHudInterface": {
         "set_device": ["Dpad", "y", -1, 2]
       }
     },
 
+
     {
-      "name": "Button 1",
-      "class": "ButtonSprite",
+      "name": "PC 1/2",
+      "class": "LatchSprite",
       "MidiHudInterface": {
-        "set_device": ["RB Dpad", [1, 0]]
+        "set_device": "RB Foot"
       }
     },
 
     {
-      "name": "Button 2",
+      "name": "C 48",
       "class": "ButtonSprite",
       "MidiHudInterface": {
-        "set_device": ["Dpad", [-1, 0]]
+        "set_device": "RB A"
       }
     },
 
     {
-      "name": "Button 3",
+      "name": "C# 49",
       "class": "ButtonSprite",
       "MidiHudInterface": {
-        "set_device": ["Dpad", [0, 1]]
+        "set_device": "RB B"
       }
     },
 
     {
-      "name": "Button 4",
+      "name": "D 50",
       "class": "ButtonSprite",
       "MidiHudInterface": {
-        "set_device": ["Stick", [0, -1]]
+        "set_device": "RB X"
+      }
+    },
+
+    {
+      "name": "D# 51",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": "RB Y"
+      }
+    },
+
+    {
+      "name": "MIDI CC 4",
+      "class": "FaderSprite",
+      "MidiHudInterface": {
+        "set_device": ["RB Dpad", "x", 1, 2]
+      }
+    },
+
+    {
+      "name": "MIDI CC 5",
+      "class": "FaderSprite",
+      "MidiHudInterface": {
+        "set_device": ["RB Dpad", "y", 1, 2]
+      }
+    },
+
+    {
+      "name": "PC 3",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": "RB Back"
+      }
+    },
+
+    {
+      "name": "PC 4",
+      "class": "ButtonSprite",
+      "MidiHudInterface": {
+        "set_device": "RB Forward"
       }
     }
   ]
