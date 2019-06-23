@@ -14,6 +14,7 @@
 
   "cc_channel": 1,
   "fader_rate": 2,
+  "fader_threshold": 0.5,
   "cc": [
     {
       "control": 0,
@@ -45,7 +46,12 @@
   "pc": {
     "R": 0,
     "L": 1,
-    "Z": 2,
+    "Z": {
+      "type": "latch",
+      "on": 2,
+      "off": 3,
+      "channel": 6
+    },
     "Dpad_up": 3,
     "Dpad_down": 4,
     "Dpad_left": 5,
