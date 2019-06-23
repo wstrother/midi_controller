@@ -221,19 +221,25 @@ class FaderSprite(AxisSprite):
                 value *= sign
                 value *= rate * (abs(value) / threshold)
 
+                if value > 0:
+                    self.handle_event("meter_up")
+
+                if value < 0:
+                    self.handle_event("meter_down")
+
                 self.meter.value += value
                 # print("\t\t VALUE CHANGE", value)
                 # print("\t\t", self.device.get_value())
 
-    def update_meter_events(self):
-        # print(self.device.get_value())
-        last, current = self.last, int(self.meter.value)
-        super(FaderSprite, self).update_meter_events()
-
-        if last > current:
-            # print("handling meter down")
-            self.handle_event("meter_down")
-
-        if last < current:
-            # print("handling meter up")
-            self.handle_event("meter_up")
+    # def update_meter_events(self):
+    #     # print(self.device.get_value())
+    #     last, current = self.last, int(self.meter.value)
+    #     super(FaderSprite, self).update_meter_events()
+    #
+    #     if last > current:
+    #         # print("handling meter down")
+    #         self.handle_event("meter_down")
+    #
+    #     if last < current:
+    #         # print("handling meter up")
+    #         self.handle_event("meter_up")

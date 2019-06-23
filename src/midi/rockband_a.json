@@ -1,0 +1,41 @@
+{
+  "controller_name": "rockband_controller",
+
+  "note_channel": 3,
+  "notes": {
+    "A": 48,
+    "B": 52,
+    "X": 55,
+    "Y": 59
+  },
+
+  "cc_channel": 4,
+  "fader_rate": 2,
+  "cc": [
+    {
+      "control": 4,
+      "device": ["Dpad_up", "Dpad_down"],
+      "type": "fader"
+    },
+    {
+      "control": 5,
+      "device": ["Dpad_right", "Dpad_left"],
+      "type": "fader"
+    }
+  ],
+
+  "pc_channel": 5,
+  "pc": {
+    "Forward": 7,
+    "Back": 8,
+    "Dpad_up": 9,
+    "Dpad_down": 10,
+    "Dpad_left": 11,
+    "Dpad_right": 12,
+    "Pedal": {
+      "type": "latch",
+      "on": 13,
+      "off": 14
+    }
+  }
+}

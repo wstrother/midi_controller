@@ -1,0 +1,92 @@
+[
+  {
+    "name": "Dpad_up",
+    "id_num": 0,
+    "map_type": "button_map_hat",
+    "joy_device": "Controller (Harmonix Drum Kit for Xbox 360) 2",
+    "axis": 1,
+    "diagonal": false,
+    "position": [
+      0,
+      1
+    ]
+  },
+  {
+    "name": "Dpad_down",
+    "id_num": 0,
+    "map_type": "button_map_hat",
+    "joy_device": "Controller (Harmonix Drum Kit for Xbox 360) 2",
+    "axis": 1,
+    "diagonal": false,
+    "position": [
+      0,
+      -1
+    ]
+  },
+  {
+    "name": "Dpad_left",
+    "id_num": 0,
+    "map_type": "button_map_hat",
+    "joy_device": "Controller (Harmonix Drum Kit for Xbox 360) 2",
+    "axis": 0,
+    "diagonal": false,
+    "position": [
+      -1,
+      0
+    ]
+  },
+  {
+    "name": "Dpad_right",
+    "id_num": 0,
+    "map_type": "button_map_hat",
+    "joy_device": "Controller (Harmonix Drum Kit for Xbox 360) 2",
+    "axis": 0,
+    "diagonal": false,
+    "position": [
+      1,
+      0
+    ]
+  },
+  {
+    "name": "A",
+    "id_num": 0,
+    "map_type": "button_map_button",
+    "joy_device": "Controller (Harmonix Drum Kit for Xbox 360) 2"
+  },
+  {
+    "name": "B",
+    "id_num": 1,
+    "map_type": "button_map_button",
+    "joy_device": "Controller (Harmonix Drum Kit for Xbox 360) 2"
+  },
+  {
+    "name": "X",
+    "id_num": 2,
+    "map_type": "button_map_button",
+    "joy_device": "Controller (Harmonix Drum Kit for Xbox 360) 2"
+  },
+  {
+    "name": "Y",
+    "id_num": 3,
+    "map_type": "button_map_button",
+    "joy_device": "Controller (Harmonix Drum Kit for Xbox 360) 2"
+  },
+  {
+    "name": "Forward",
+    "id_num": 7,
+    "map_type": "button_map_button",
+    "joy_device": "Controller (Harmonix Drum Kit for Xbox 360) 2"
+  },
+  {
+    "name": "Back",
+    "id_num": 6,
+    "map_type": "button_map_button",
+    "joy_device": "Controller (Harmonix Drum Kit for Xbox 360) 2"
+  },
+  {
+    "name": "Pedal",
+    "id_num": 4,
+    "map_type": "button_map_button",
+    "joy_device": "Controller (Harmonix Drum Kit for Xbox 360) 2"
+  }
+]

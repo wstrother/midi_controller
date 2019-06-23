@@ -1,0 +1,54 @@
+{
+  "controller_name": "64_controller",
+
+  "note_channel": 0,
+  "notes": {
+    "A": 60,
+    "B": 62,
+    "Start": 64,
+    "C_down": 65,
+    "C_left": 67,
+    "C_right": 69,
+    "C_up": 71
+  },
+
+  "cc_channel": 1,
+  "fader_rate": 2,
+  "cc": [
+    {
+      "control": 0,
+      "device": "Stick_y"
+    },
+    {
+      "control": 1,
+      "device": "Stick_x"
+    },
+    {
+      "control": 2,
+      "device": [
+        "Dpad_up",
+        "Dpad_down"
+      ],
+      "type": "fader"
+    },
+    {
+      "control": 3,
+      "device": [
+        "Dpad_right",
+        "Dpad_left"
+      ],
+      "type": "fader"
+    }
+  ],
+
+  "pc_channel": 2,
+  "pc": {
+    "R": 0,
+    "L": 1,
+    "Z": 2,
+    "Dpad_up": 3,
+    "Dpad_down": 4,
+    "Dpad_left": 5,
+    "Dpad_right": 6
+  }
+}

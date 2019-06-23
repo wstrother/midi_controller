@@ -1,0 +1,104 @@
+[
+  {
+    "name": "Stick_y",
+    "id_num": 1,
+    "map_type": "axis_map",
+    "sign": -1,
+    "joy_device": "USB GamePad 1"
+  },
+  {
+    "name": "Stick_x",
+    "id_num": 0,
+    "map_type": "axis_map",
+    "sign": 1,
+    "joy_device": "USB GamePad 1"
+  },
+  {
+    "name": "Dpad_up",
+    "id_num": 12,
+    "map_type": "button_map_button",
+    "joy_device": "USB GamePad 1"
+  },
+  {
+    "name": "Dpad_down",
+    "id_num": 14,
+    "map_type": "button_map_button",
+    "joy_device": "USB GamePad 1"
+  },
+  {
+    "name": "Dpad_left",
+    "id_num": 15,
+    "map_type": "button_map_button",
+    "joy_device": "USB GamePad 1"
+  },
+  {
+    "name": "Dpad_right",
+    "id_num": 13,
+    "map_type": "button_map_button",
+    "joy_device": "USB GamePad 1"
+  },
+  {
+    "name": "C_up",
+    "id_num": 2,
+    "map_type": "button_map_axis",
+    "joy_device": "USB GamePad 1",
+    "sign": -1
+  },
+  {
+    "name": "C_down",
+    "id_num": 2,
+    "map_type": "button_map_axis",
+    "joy_device": "USB GamePad 1",
+    "sign": 1
+  },
+  {
+    "name": "C_left",
+    "id_num": 3,
+    "map_type": "button_map_axis",
+    "joy_device": "USB GamePad 1",
+    "sign": 1
+  },
+  {
+    "name": "C_right",
+    "id_num": 3,
+    "map_type": "button_map_axis",
+    "joy_device": "USB GamePad 1",
+    "sign": -1
+  },
+  {
+    "name": "Start",
+    "id_num": 9,
+    "map_type": "button_map_button",
+    "joy_device": "USB GamePad 1"
+  },
+  {
+    "name": "A",
+    "id_num": 1,
+    "map_type": "button_map_button",
+    "joy_device": "USB GamePad 1"
+  },
+  {
+    "name": "B",
+    "id_num": 2,
+    "map_type": "button_map_button",
+    "joy_device": "USB GamePad 1"
+  },
+  {
+    "name": "R",
+    "id_num": 7,
+    "map_type": "button_map_button",
+    "joy_device": "USB GamePad 1"
+  },
+  {
+    "name": "L",
+    "id_num": 6,
+    "map_type": "button_map_button",
+    "joy_device": "USB GamePad 1"
+  },
+  {
+    "name": "Z",
+    "id_num": 8,
+    "map_type": "button_map_button",
+    "joy_device": "USB GamePad 1"
+  }
+]
