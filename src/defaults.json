@@ -1,0 +1,19 @@
+{
+  "text_color": [255, 255, 128],
+  "font": [12, "Verdana", true],
+
+  "note_color": [0, 0, 255],
+  "note_radius": 25,
+  "note_position": [10, 20],
+  "note_margin": [75, 0],
+
+  "pc_color": [0, 255, 255],
+  "pc_radius": 25,
+  "pc_position": [10, 150],
+  "pc_margin": [75, 0],
+
+  "cc_colors": [[0, 255, 0], [32, 64, 32]],
+  "cc_size": [100, 20],
+  "cc_position": [550, 30],
+  "cc_margin": [0, 50]
+}

@@ -1,6 +1,4 @@
-from inputs import InputMapper
-import json
-import pygame
+from constants import NAME
 
 
 class Controller:
@@ -33,7 +31,7 @@ class Controller:
             mapping = input_mapper.get_from_json(d)
 
             c.add_device(
-                d["name"], mapping
+                d[NAME], mapping
             )
 
         return c
@@ -47,27 +45,3 @@ class InputDevice:
 
     def update(self):
         self.value = self.mapping.get_value()
-
-
-if __name__ == "__main__":
-    file_name = input("Controller name")
-    pygame.init()
-    pygame.display.set_mode((800, 600))
-
-    with open("controllers/" + file_name + ".json", "r") as file:
-        controller_data = json.load(file)
-        test_controller = Controller.load_controller(
-            "test_controller", controller_data, InputMapper()
-        )
-
-        while True:
-            pygame.display.flip()
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    exit()
-
-            test_controller.update()
-            A = test_controller.get_value("A")
-
-            if A:
-                print("A")

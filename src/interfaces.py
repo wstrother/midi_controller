@@ -1,20 +1,9 @@
 from context import AppInterface
-from inputs import CONTROLLERS, InputMapper
-from entities import EVENT_NAME, EVENT_TRIGGER, EVENT_RESPONSE, EVENT_TARGET
+from inputs import InputMapper
 from controller import Controller
-from sprites import ButtonSprite, LatchSprite, MeterSprite, FaderSprite
+from sprites import ButtonSprite, LatchSprite, MeterSprite, FaderSprite, TextSprite
 from os.path import join
-
-TEXT_COLOR = 255, 255, 255
-FONT = 20, "Verdana", True
-
-BUTTON_COLOR = 0, 0, 255
-PC_BUTTON_COLOR = 0, 255, 255
-BUTTON_RADIUS = 20
-
-METER_SIZE = 100, 20
-FILL_COLOR = 0, 255, 0
-EMPTY_COLOR = 255, 0, 0
+import constants as con
 
 
 class UiInterface(AppInterface):
@@ -26,25 +15,44 @@ class UiInterface(AppInterface):
         sprite.set_graphics()
 
     @staticmethod
-    def set_rect_graphics(sprite, color, size, position):
+    def set_rect_graphics(sprite, color, size):
         sprite.set_size(*size)
-        sprite.set_position(*position)
         sprite.set_color(*color)
         sprite.set_graphics()
 
     @staticmethod
-    def set_button_graphics(sprite, color, radius, position):
+    def set_button_graphics(sprite, color, radius):
         sprite.set_color(*color)
         sprite.set_radius(radius)
-        sprite.set_position(*position)
         sprite.set_graphics()
 
     @staticmethod
-    def set_meter_graphics(sprite, colors, size, position):
+    def set_meter_graphics(sprite, colors, size):
         sprite.set_colors(*colors)
         sprite.set_size(*size)
-        sprite.set_position(*position)
         sprite.set_graphics()
+
+    @staticmethod
+    def arrange_sprites(sprites, position, margin):
+        x, y = position
+        mx, my = margin
+
+        for sprite in sprites:
+            sprite.set_position(x, y)
+            x += mx
+            y += my
+
+    def label_sprites(self, sprites, color, font):
+        for sprite in sprites:
+            name = sprite.name
+            label = TextSprite("Label for {}".format(name))
+            self.set_text(
+                label, name, color, font
+            )
+            label.set_group(sprite.group)
+            w, h = label.size
+            x, y = sprite.position
+            label.set_position(x, y - h)
 
 
 class ControllerInterface(AppInterface):
@@ -54,7 +62,7 @@ class ControllerInterface(AppInterface):
 
         for name in names:
             data = self.context.load_json(
-                join(CONTROLLERS, name)
+                join(con.CONTROLLERS, name)
             )
             controllers.append(
                 Controller.load_controller(name, data, im)
@@ -63,99 +71,110 @@ class ControllerInterface(AppInterface):
         layer.set_controllers(*controllers)
 
 
-MIDI = "midi"
-CONTROLLER_NAME = "controller_name"
-STATUS = "status"
-CHANNEL = "channel"
-DEVICE = "device"
-
-NOTE_CHANNEL = "note_channel"
-NOTES = "notes"
-NOTE = "note"
-NOTE_ON = "note_on"
-NOTE_OFF = "note_off"
-SPRITE_TYPE = "type"
-LATCH = "latch"
-BUTTON = "button"
-ON = "on"
-OFF = "off"
-
-CC_CHANNEL = "cc_channel"
-CC_KEY = "cc"
-CC_STATUS = "control_change"
-CONTROL = "control"
-
-METER = "meter"
-SIGN = "sign"
-RANGE = "range"
-
-FADER = "fader"
-FADER_RATE = "fader_rate"
-FADER_THRESH = "fader_threshold"
-RATE = "rate"
-THRESH = "threshold"
-
-PC_CHANNEL = "pc_channel"
-PC_KEY = "pc"
-PC_STATUS = "program_change"
-PROGRAM = "program"
-
-MIDI_MESSAGE = "midi_message"
-BUTTON_ON = "button_on"
-BUTTON_OFF = "button_off"
-METER_CHANGE = "meter_change"
-
-
 class MidiInterface(UiInterface):
     def load_midi_controllers(self, layer, *names):
         for name in names:
-            data = self.context.load_json(join(MIDI, name))
+            data = self.context.load_json(join(con.MIDI, name))
+            data = self.get_defaults(data)
 
             self.add_midi_hud(layer, data)
 
+    @staticmethod
+    def get_note_name(value):
+        octave = value // 12
+
+        return "{} {}".format(
+            con.NOTE_NAMES[value % 12],
+            octave
+        )
+
+    def get_defaults(self, data):
+        try:
+            defaults = self.context.load_json(con.DEFAULTS)
+        except FileNotFoundError:
+            return data
+
+        for key in defaults:
+            if key not in data:
+                data[key] = defaults[key]
+
+        return data
+
     def add_midi_hud(self, layer, data):
-        group = layer.groups[0]
-        controller = layer.get_controller(data[CONTROLLER_NAME])
+        group = layer.groups[-1]
+        controller = layer.get_controller(data[con.CONTROLLER_NAME])
         c_index = layer.controllers.index(controller)
 
-        self.add_midi_notes(
-            layer, c_index, group, data,
-            (10, 100), (50, 0)
+        note_sprites = []
+        cc_sprites = []
+        pc_sprites = []
+
+        self.add_midi_notes(layer, data, note_sprites)
+        self.add_midi_cc(layer, data, cc_sprites)
+        self.add_midi_pc(layer, data, pc_sprites)
+
+        for sprite in note_sprites + cc_sprites + pc_sprites:
+            sprite.set_group(group)
+            sprite.set_controller(layer, c_index)
+
+        self.set_midi_graphics(
+            note_sprites, self.set_button_graphics,
+            [data.get(con.NOTE_COLOR_KEY, con.BUTTON_COLOR),
+             data.get(con.NOTE_R_KEY, con.BUTTON_RADIUS)],
+            data.get(con.NOTES_POS_KEY, con.NOTES_POS),
+            data.get(con.NOTES_M_KEY, con.NOTES_MARGIN)
         )
 
-        self.add_midi_cc(
-            layer, c_index, group, data,
-            (10, 200), (0, 25)
+        self.set_midi_graphics(
+            cc_sprites, self.set_meter_graphics,
+            [data.get(con.CC_COLOR_KEY, [con.FILL_COLOR, con.EMPTY_COLOR]),
+             data.get(con.CC_SIZE_KEY, con.METER_SIZE)],
+            data.get(con.CC_POS_KEY, con.CC_POS),
+            data.get(con.CC_M_KEY, con.CC_MARGIN)
         )
 
-        self.add_midi_pc(
-            layer, c_index, group, data,
-            (120, 200), (0, 50)
+        self.set_midi_graphics(
+            pc_sprites, self.set_button_graphics,
+            [data.get(con.PC_COLOR_KEY, con.PC_BUTTON_COLOR),
+             data.get(con.PC_R_KEY, con.BUTTON_RADIUS)],
+            data.get(con.PC_POS_KEY, con.PC_POS),
+            data.get(con.PC_M_KEY, con.PC_MARGIN)
         )
 
-    def add_midi_pc(self, layer, c_index, group, data, position, margin):
-        x, y = position
-        mx, my = margin
+        self.label_sprites(
+            note_sprites + cc_sprites + pc_sprites,
+            data.get(con.TEXT_KEY, con.TEXT_COLOR),
+            data.get(con.FONT_KEY, con.FONT)
+        )
 
-        for pc in data[PC_KEY]:
-            d = data[PC_KEY][pc]
+    def set_midi_graphics(self, sprites, method, args, position, margin):
+        for sprite in sprites:
+            method(
+                sprite, *args
+            )
+
+        self.arrange_sprites(sprites, position, margin)
+
+    def add_midi_pc(self, layer, data, sprites):
+        for pc in data[con.PC_KEY]:
+            d = data[con.PC_KEY][pc]
             if type(d) is int:
-                d = {PROGRAM: d}
+                d = {con.PROGRAM: d}
 
-            button_type = d.get(SPRITE_TYPE, BUTTON)
-            if PROGRAM not in d:
-                d[PROGRAM] = "{}/{}".format(d[ON], d[OFF])
-            name = "PC sprite {}".format(d[PROGRAM])
+            button_type = d.get(con.SPRITE_TYPE, con.BUTTON)
+            if con.PROGRAM not in d:
+                d[con.PROGRAM] = "{}/{}".format(d[con.ON], d[con.OFF])
+            name = "PC {}".format(d[con.PROGRAM])
 
-            if button_type == LATCH:
+            if button_type == con.LATCH:
                 sprite = LatchSprite(name)
                 on_d = {
-                    PROGRAM: d[ON],
-                    CHANNEL: d.get(CHANNEL, data.get(PC_CHANNEL, 0))
+                    con.PROGRAM: d[con.ON],
+                    con.CHANNEL: d.get(con.CHANNEL, data.get(con.PC_CHANNEL, 0))
                 }
                 off_d = {
-                    PROGRAM: d[OFF],
-                    CHANNEL: d.get(CHANNEL, data.get(PC_CHANNEL, 0))
+                    con.PROGRAM: d[con.OFF],
+                    con.CHANNEL: d.get(con.CHANNEL, data.get(con.PC_CHANNEL, 0))
                 }
 
                 self.add_pc_listener(
@@ -164,158 +183,128 @@ class MidiInterface(UiInterface):
 
             else:
                 sprite = ButtonSprite(name)
-                if CHANNEL not in d and PC_CHANNEL in data:
-                    d[CHANNEL] = data[PC_CHANNEL]
+                if con.CHANNEL not in d and con.PC_CHANNEL in data:
+                    d[con.CHANNEL] = data[con.PC_CHANNEL]
 
                 self.add_pc_listener(
                     sprite, layer, d
                 )
 
-            sprite.set_group(group)
-            sprite.set_controller(layer, c_index)
             sprite.set_device_name(pc)
+            sprites.append(sprite)
 
-            self.set_button_graphics(
-                sprite, PC_BUTTON_COLOR, BUTTON_RADIUS, (x, y)
-            )
+    def add_midi_cc(self, layer, data, sprites):
+        for cc in data[con.CC_KEY]:
+            meter_type = cc.get(con.SPRITE_TYPE, con.METER)
+            name = "CC {}".format(cc[con.CONTROL])
 
-            x += mx
-            y += my
-
-    def add_midi_cc(self, layer, c_index, group, data, position, margin):
-        x, y = position
-        mx, my = margin
-
-        for cc in data[CC_KEY]:
-            meter_type = cc.get(SPRITE_TYPE, METER)
-            name = "CC sprite {}".format(cc[CONTROL])
-
-            if meter_type == FADER:
+            if meter_type == con.FADER:
                 sprite = FaderSprite(name)
 
-                rate = cc.get(RATE, data.get(FADER_RATE, False))
+                rate = cc.get(con.RATE, data.get(con.FADER_RATE, False))
                 if rate:
                     sprite.set_rate(rate)
 
-                threshold = cc.get(THRESH, data.get(FADER_THRESH, False))
+                threshold = cc.get(con.THRESH, data.get(con.FADER_THRESH, False))
                 if threshold:
                     sprite.set_threshold(threshold)
 
             else:
                 sprite = MeterSprite(name)
 
-                sign = cc.get(SIGN, False)
+                sign = cc.get(con.MTR_SIGN, False)
                 if sign:
                     sprite.set_sign(sign)
 
-                r = cc.get(RANGE, False)
+                r = cc.get(con.MTR_RANGE, False)
                 if r:
                     sprite.set_range(r)
 
             d = {
-                CONTROL: cc[CONTROL],
-                CHANNEL: cc.get(CHANNEL, data.get(CC_CHANNEL, 0))
+                con.CONTROL: cc[con.CONTROL],
+                con.CHANNEL: cc.get(con.CHANNEL, data.get(con.CC_CHANNEL, 0))
             }
             self.add_cc_listener(
                 sprite, layer, d
             )
 
-            sprite.set_group(group)
-            sprite.set_controller(layer, c_index)
-            sprite.set_device_name(cc[DEVICE])
+            sprite.set_device_name(cc[con.DEVICE])
+            sprites.append(sprite)
 
-            self.set_meter_graphics(
-                sprite, (FILL_COLOR, EMPTY_COLOR), METER_SIZE, (x, y)
-            )
-
-            x += mx
-            y += my
-
-    def add_midi_notes(self, layer, c_index, group, data, position, margin):
-        x, y = position
-        mx, my = margin
-
-        for note in data[NOTES]:
-            sprite = ButtonSprite(note + " button sprite")
-
-            d = data[NOTES][note]
+    def add_midi_notes(self, layer, data, sprites):
+        for note in data[con.NOTES]:
+            d = data[con.NOTES][note]
             if type(d) is int:
-                d = {NOTE: d}
-            if CHANNEL not in d and NOTE_CHANNEL in data:
-                d[CHANNEL] = data[NOTE_CHANNEL]
+                d = {con.NOTE: d}
+            if con.CHANNEL not in d and con.NOTE_CHANNEL in data:
+                d[con.CHANNEL] = data[con.NOTE_CHANNEL]
+
+            sprite = ButtonSprite(self.get_note_name(d[con.NOTE]))
 
             self.add_note_listener(sprite, layer, d)
 
-            sprite.set_group(group)
-            sprite.set_controller(layer, c_index)
             sprite.set_device_name(note)
-
-            self.set_button_graphics(
-                sprite, BUTTON_COLOR, BUTTON_RADIUS, (x, y)
-            )
-
-            x += mx
-            y += my
+            sprites.append(sprite)
 
     @staticmethod
     def add_cc_listener(sprite, layer, data):
         listener = {
-            EVENT_NAME: METER_CHANGE,
-            EVENT_TARGET: layer,
-            EVENT_RESPONSE: {
-                EVENT_NAME: MIDI_MESSAGE,
-                STATUS: CC_STATUS
+            con.EVENT_NAME: con.METER_CHANGE,
+            con.EVENT_TARGET: layer,
+            con.EVENT_RESPONSE: {
+                con.EVENT_NAME: con.MIDI_MESSAGE,
+                con.STATUS: con.CC_STATUS
             }
         }
-        listener[EVENT_RESPONSE].update(data)
+        listener[con.EVENT_RESPONSE].update(data)
         sprite.listeners.append(listener)
 
     @staticmethod
     def add_pc_listener(sprite, layer, on_data, off_data=None):
         button_on = {
-            EVENT_NAME: BUTTON_ON,
-            EVENT_TARGET: layer,
-            EVENT_RESPONSE: {
-                EVENT_NAME: MIDI_MESSAGE,
-                STATUS: PC_STATUS
+            con.EVENT_NAME: con.BUTTON_ON,
+            con.EVENT_TARGET: layer,
+            con.EVENT_RESPONSE: {
+                con.EVENT_NAME: con.MIDI_MESSAGE,
+                con.STATUS: con.PC_STATUS
             }
         }
-        button_on[EVENT_RESPONSE].update(on_data)
+        button_on[con.EVENT_RESPONSE].update(on_data)
         sprite.listeners.append(button_on)
 
         if off_data:
             button_off = {
-                EVENT_NAME: BUTTON_OFF,
-                EVENT_TARGET: layer,
-                EVENT_RESPONSE: {
-                    EVENT_NAME: MIDI_MESSAGE,
-                    STATUS: PC_STATUS
+                con.EVENT_NAME: con.BUTTON_OFF,
+                con.EVENT_TARGET: layer,
+                con.EVENT_RESPONSE: {
+                    con.EVENT_NAME: con.MIDI_MESSAGE,
+                    con.STATUS: con.PC_STATUS
                 }
             }
-            button_off[EVENT_RESPONSE].update(off_data)
+            button_off[con.EVENT_RESPONSE].update(off_data)
             sprite.listeners.append(button_off)
 
     @staticmethod
     def add_note_listener(sprite, layer, data):
         note_on = {
-            EVENT_NAME: BUTTON_ON,
-            EVENT_TARGET: layer,
-            EVENT_RESPONSE: {
-                EVENT_NAME: MIDI_MESSAGE,
-                STATUS: NOTE_ON,
+            con.EVENT_NAME: con.BUTTON_ON,
+            con.EVENT_TARGET: layer,
+            con.EVENT_RESPONSE: {
+                con.EVENT_NAME: con.MIDI_MESSAGE,
+                con.STATUS: con.NOTE_ON,
             }
         }
-        note_on[EVENT_RESPONSE].update(data)
+        note_on[con.EVENT_RESPONSE].update(data)
 
         note_off = {
-            EVENT_NAME: BUTTON_OFF,
-            EVENT_TARGET: layer,
-            EVENT_RESPONSE: {
-                EVENT_NAME: MIDI_MESSAGE,
-                STATUS: NOTE_OFF,
+            con.EVENT_NAME: con.BUTTON_OFF,
+            con.EVENT_TARGET: layer,
+            con.EVENT_RESPONSE: {
+                con.EVENT_NAME: con.MIDI_MESSAGE,
+                con.STATUS: con.NOTE_OFF,
             }
         }
-        note_off[EVENT_RESPONSE].update(data)
+        note_off[con.EVENT_RESPONSE].update(data)
 
         sprite.listeners += [note_on, note_off]
 

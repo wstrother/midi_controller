@@ -1,12 +1,5 @@
 import mido
-
-LOOP_BE1 = "LoopBe Internal MIDI 1"
-
-EVENT_NAME = "name"
-EVENT_TRIGGER = "trigger"
-EVENT_TARGET = "target"
-EVENT_RESPONSE = "response"
-ON_ = "on_"
+import constants as con
 
 
 class Entity:
@@ -18,26 +11,26 @@ class Entity:
 
     def handle_event(self, event):
         if type(event) is str:
-            event = {EVENT_NAME: event}
+            event = {con.EVENT_NAME: event}
 
-        print("{} handled {}".format(
-            self.name, event[EVENT_NAME]
-        ))
+        # print("{} handled {}".format(
+        #     self.name, event[EVENT_NAME]
+        # ))
 
         self.do_event_method(event)
         self.check_listeners(event)
 
     def check_listeners(self, event):
         for l in self.listeners:
-            if l[EVENT_NAME] == event[EVENT_NAME]:
-                target = l[EVENT_TARGET]
-                response = l[EVENT_RESPONSE]
-                response[EVENT_TRIGGER] = event
+            if l[con.EVENT_NAME] == event[con.EVENT_NAME]:
+                target = l[con.EVENT_TARGET]
+                response = l[con.EVENT_RESPONSE]
+                response[con.EVENT_TRIGGER] = event
 
                 target.handle_event(response)
 
     def do_event_method(self, event):
-        m = getattr(self, ON_ + event[EVENT_NAME], None)
+        m = getattr(self, con.ON_ + event[con.EVENT_NAME], None)
 
         if m:
             m(event)
@@ -53,7 +46,7 @@ class Layer(Entity):
 
         self.groups = []
         self.controllers = []
-        self.port = mido.open_output(LOOP_BE1)
+        self.port = None
 
         self.update_methods += [
             self.update_controllers,
@@ -61,10 +54,14 @@ class Layer(Entity):
         ]
 
     def send_message(self, **args):
-        status = args.pop("status")
-        message = mido.messages.Message(status, **args)
-        self.port.send(message)
-        print(message)
+        if self.port:
+            status = args.pop("status")
+            message = mido.messages.Message(status, **args)
+            self.port.send(message)
+            print(message)
+
+    def set_midi_port(self, name):
+        self.port = mido.open_output(name)
 
     def set_groups(self, *groups):
         for g in groups:
@@ -154,4 +151,8 @@ class Sprite(Entity):
         self._controller = layer, index
 
     def get_graphics(self):
-        return self.graphics.get_args()
+        if self.graphics:
+            return self.graphics.get_args()
+
+        else:
+            return []

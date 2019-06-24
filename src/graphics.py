@@ -1,7 +1,5 @@
-from game import PYGAME_RECT, PYGAME_CIRCLE
+from constants import PYGAME_RECT, PYGAME_CIRCLE, MIDI_CC_MAX
 from pygame import Rect
-
-MIDI_CC_MAX = 127
 
 
 class TextGraphics:

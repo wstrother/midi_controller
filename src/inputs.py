@@ -1,29 +1,11 @@
 import pygame
 import json
 from os.path import join
+import constants as con
 
 pygame.init()
 
-CONTROLLERS = "controllers"
-STICK_DEAD_ZONE = 0.5
-AXIS_MIN = 0.9
 INPUT_DEVICES = {}
-
-BUTTON_MAP = "button_map_button"
-BUTTON_MAP_KEY = "button_map_key"
-BUTTON_MAP_HAT = "button_map_hat"
-BUTTON_MAP_AXIS = "button_map_axis"
-AXIS_MAP = "axis_map"
-
-K_ = "K_"
-NAME = "name"
-AXIS = "axis"
-SIGN = "sign"
-POSITION = "position"
-DIAGONAL = "diagonal"
-ID_NUM = "id_num"
-MAP_TYPE = "map_type"
-JOY_DEVICE = "joy_device"
 
 
 def get_device_key(joy):
@@ -48,9 +30,9 @@ class Mapping:
 
     def get_json(self):
         return {
-            NAME: self.name,
-            ID_NUM: self.id_num,
-            MAP_TYPE: self.map_type
+            con.NAME: self.name,
+            con.ID_NUM: self.id_num,
+            con.MAP_TYPE: self.map_type
         }
 
     def get_device(self):
@@ -63,7 +45,7 @@ class ButtonMappingKey(Mapping):
             id_num = self.get_id(id_num)
         super(ButtonMappingKey, self).__init__(name, id_num)
 
-        self.map_type = BUTTON_MAP_KEY
+        self.map_type = con.BUTTON_MAP_KEY
 
     def is_pressed(self):
         return pygame.key.get_pressed()[self.id_num]
@@ -74,9 +56,9 @@ class ButtonMappingKey(Mapping):
     @staticmethod
     def get_id(key_string):
         if len(key_string) > 1:
-            key = K_ + key_string.upper()
+            key = con.K_ + key_string.upper()
         else:
-            key = K_ + key_string
+            key = con.K_ + key_string
 
         return pygame.__dict__[key]
 
@@ -89,11 +71,11 @@ class ButtonMappingButton(ButtonMappingKey):
         super(ButtonMappingButton, self).__init__(name, id_num)
         self.joy_device_name = joy_name
 
-        self.map_type = BUTTON_MAP
+        self.map_type = con.BUTTON_MAP
 
     def get_json(self):
         d = super(ButtonMappingButton, self).get_json()
-        d[JOY_DEVICE] = self.joy_device_name
+        d[con.JOY_DEVICE] = self.joy_device_name
 
         return d
 
@@ -106,18 +88,18 @@ class ButtonMappingAxis(ButtonMappingButton):
         super(ButtonMappingAxis, self).__init__(name, id_num, joy_name)
         self.sign = sign
 
-        self.map_type = BUTTON_MAP_AXIS
+        self.map_type = con.BUTTON_MAP_AXIS
 
     def get_json(self):
         d = super(ButtonMappingAxis, self).get_json()
-        d[SIGN] = self.sign
+        d[con.SIGN] = self.sign
 
         return d
 
     def is_pressed(self):
         axis = self.get_device().get_axis(self.id_num)
 
-        return axis * self.sign > STICK_DEAD_ZONE
+        return axis * self.sign > con.STICK_DEAD_ZONE
 
 
 class ButtonMappingHat(ButtonMappingButton):
@@ -127,13 +109,13 @@ class ButtonMappingHat(ButtonMappingButton):
         self.axis = axis
         self.diagonal = diagonal
 
-        self.map_type = BUTTON_MAP_HAT
+        self.map_type = con.BUTTON_MAP_HAT
 
     def get_json(self):
         d = super(ButtonMappingHat, self).get_json()
-        d[AXIS] = self.axis
-        d[DIAGONAL] = self.diagonal
-        d[POSITION] = self.position
+        d[con.AXIS] = self.axis
+        d[con.DIAGONAL] = self.diagonal
+        d[con.POSITION] = self.position
 
         return d
 
@@ -152,12 +134,12 @@ class AxisMapping(Mapping):
         self.sign = sign
         self.joy_device_name = joy_name
 
-        self.map_type = AXIS_MAP
+        self.map_type = con.AXIS_MAP
 
     def get_json(self):
         d = super(AxisMapping, self).get_json()
-        d[SIGN] = self.sign
-        d[JOY_DEVICE] = self.joy_device_name
+        d[con.SIGN] = self.sign
+        d[con.JOY_DEVICE] = self.joy_device_name
 
         return d
 
@@ -170,37 +152,37 @@ class AxisMapping(Mapping):
 class InputMapper:
     def __init__(self):
         self.axis_neutral = False
-        self.axis_min = AXIS_MIN
+        self.axis_min = con.AXIS_MIN
         self.devices = INPUT_DEVICES
 
     @staticmethod
     def get_from_json(data):
-        if data[MAP_TYPE] == BUTTON_MAP:
+        if data[con.MAP_TYPE] == con.BUTTON_MAP:
             return ButtonMappingButton(
-                data[NAME], data[ID_NUM], data[JOY_DEVICE]
+                data[con.NAME], data[con.ID_NUM], data[con.JOY_DEVICE]
             )
 
-        if data[MAP_TYPE] == BUTTON_MAP_KEY:
+        if data[con.MAP_TYPE] == con.BUTTON_MAP_KEY:
             return ButtonMappingKey(
-                data[NAME], data[ID_NUM]
+                data[con.NAME], data[con.ID_NUM]
             )
 
-        if data[MAP_TYPE] == BUTTON_MAP_AXIS:
+        if data[con.MAP_TYPE] == con.BUTTON_MAP_AXIS:
             return ButtonMappingAxis(
-                data[NAME], data[ID_NUM], data[JOY_DEVICE],
-                data[SIGN]
+                data[con.NAME], data[con.ID_NUM], data[con.JOY_DEVICE],
+                data[con.SIGN]
             )
 
-        if data[MAP_TYPE] == BUTTON_MAP_HAT:
+        if data[con.MAP_TYPE] == con.BUTTON_MAP_HAT:
             return ButtonMappingHat(
-                data[NAME], data[ID_NUM], data[JOY_DEVICE],
-                data[POSITION], data[AXIS], data[DIAGONAL]
+                data[con.NAME], data[con.ID_NUM], data[con.JOY_DEVICE],
+                data[con.POSITION], data[con.AXIS], data[con.DIAGONAL]
             )
 
-        if data[MAP_TYPE] == AXIS_MAP:
+        if data[con.MAP_TYPE] == con.AXIS_MAP:
             return AxisMapping(
-                data[NAME], data[ID_NUM], data[JOY_DEVICE],
-                data[SIGN]
+                data[con.NAME], data[con.ID_NUM], data[con.JOY_DEVICE],
+                data[con.SIGN]
             )
 
     def check_axes(self, devices):
@@ -306,7 +288,7 @@ class InputMapper:
                         return mapping
 
 
-if __name__ == "__main__":
+def build_controller():
     im = InputMapper()
 
     done = False
@@ -376,5 +358,9 @@ if __name__ == "__main__":
 
     mappings = [m.get_json() for m in mappings]
 
-    with open(join(CONTROLLERS, file_name) + ".json", "w") as file:
+    with open(join(con.CONTROLLERS, file_name) + con.JSON, "w") as file:
         json.dump(mappings, file, indent=2)
+
+
+if __name__ == "__main__":
+    build_controller()

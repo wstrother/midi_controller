@@ -13,8 +13,8 @@
   },
 
   "cc_channel": 1,
-  "fader_rate": 2,
-  "fader_threshold": 0.5,
+  "cc_size": [100, 10],
+  "cc_margin": [0, 30],
   "cc": [
     {
       "control": 0,
@@ -39,6 +39,26 @@
         "Dpad_left"
       ],
       "type": "fader"
+    },
+    {
+      "control": 4,
+      "device": "Stick_x",
+      "range": 1
+    },
+    {
+      "control": 5,
+      "device": "Stick_x",
+      "range": -1
+    },
+    {
+      "control": 6,
+      "device": "Stick_y",
+      "range": 1
+    },
+    {
+      "control": 7,
+      "device": "Stick_y",
+      "range": -1
     }
   ],
 

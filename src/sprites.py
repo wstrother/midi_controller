@@ -1,8 +1,7 @@
 from entities import Sprite
-from graphics import TextGraphics, GeometryGraphics, ButtonGraphics, AxisGraphics, MIDI_CC_MAX
+from graphics import TextGraphics, ButtonGraphics, AxisGraphics
 from pygame.font import Font, match_font
-from game import PYGAME_RECT
-from pygame import Rect
+from constants import MIDI_CC_MAX
 
 
 class TextSprite(Sprite):
@@ -24,32 +23,7 @@ class TextSprite(Sprite):
 
     def set_graphics(self):
         self.graphics = TextGraphics(self)
-
-
-class RectSprite(Sprite):
-    def __init__(self, name):
-        super(RectSprite, self).__init__(name)
-
-        self.color = None
-        self.graphics = GeometryGraphics(self)
-
-    def set_color(self, r, g, b):
-        self.color = r, g, b
-
-    def set_graphics(self):
-        self.graphics.items = [
-            (PYGAME_RECT, self.color, Rect(self.position, self.size))
-        ]
-
-    def set_size(self, w, h):
-        super(RectSprite, self).set_size(w, h)
-        if self.color:
-            self.set_graphics()
-
-    def set_position(self, x, y):
-        super(RectSprite, self).set_position(x, y)
-        if self.color:
-            self.set_graphics()
+        self.set_size(*self.graphics.image.get_size())
 
 
 class MidiHudSprite(Sprite):
