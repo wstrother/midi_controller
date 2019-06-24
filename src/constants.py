@@ -20,7 +20,7 @@ EVENT_RESPONSE = "response"
 ON_ = "on_"
 
 # midi
-PORT = "port"
+PORT = "midi_port"
 MIDI = "midi"
 NOTE_NAMES = [
     "C", "C#", "D", "D#", "E", "F",

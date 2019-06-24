@@ -2,5 +2,5 @@
   "controllers": ["64_controller", "rockband_controller"],
   "midi": ["64_midi", "rockband_midi"],
   "size": [670, 520],
-  "port": "LoopBe Internal MIDI 1"
+  "midi_port": "LoopBe Internal MIDI 1"
 }
